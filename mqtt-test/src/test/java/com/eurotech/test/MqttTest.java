@@ -7,9 +7,11 @@ package com.eurotech.test;
 import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 import org.fusesource.hawtbuf.Buffer;
+
 import org.fusesource.mqtt.client.*;
 import org.fusesource.mqtt.codec.MQTTFrame;
 import org.fusesource.mqtt.codec.PUBLISH;
+
 import org.junit.After;
 import org.junit.Before;
 
@@ -30,31 +32,32 @@ public class MqttTest extends TestCase implements MqttTestConstants {
     public void setUp() throws Exception {
         client = new MQTT();
         client.setCleanSession(true);
-        client.setTracer(new Tracer() {
-            @Override
-            public void onReceive(MQTTFrame frame) {
-                Buffer myBuffer = frame.buffers[0].deepCopy();
-                MQTTFrame myFrame = new MQTTFrame(myBuffer);
-
-                PUBLISH publish = null;
-                try {
-                    publish = new PUBLISH().decode(myFrame);
-                } catch (Exception ex) {
-                    //
-                }
-                LOG.info("Primary Client Received: " + frame + " payload:" + publish.toString());
-            }
-
-            @Override
-            public void onSend(MQTTFrame frame) {
-                LOG.info("Primary Client Sent:" + frame);
-            }
-
-            @Override
-            public void debug(String message, Object... args) {
-                LOG.info(String.format(message, args));
-            }
-        });
+//        client.setTracer(new Tracer() {
+//            @Override
+//            public void onReceive(MQTTFrame frame) {
+//                if (frame == null) return;
+//                Buffer myBuffer = frame.buffers[0].deepCopy();
+//                MQTTFrame myFrame = new MQTTFrame(myBuffer);
+//
+//                PUBLISH publish = null;
+//                try {
+//                    publish = new PUBLISH().decode(myFrame);
+//                } catch (Exception ex) {
+//                    //
+//                }
+//                LOG.info("Primary Client Received: " + frame + " payload:" + publish.toString());
+//            }
+//
+//            @Override
+//            public void onSend(MQTTFrame frame) {
+//                LOG.info("Primary Client Sent:" + frame);
+//            }
+//
+//            @Override
+//            public void debug(String message, Object... args) {
+//                LOG.info(String.format(message, args));
+//            }
+//        });
 
         client.setHost(BROKER_URL);
         client.setClientId(CLIENT_ID);
@@ -77,6 +80,7 @@ public class MqttTest extends TestCase implements MqttTestConstants {
     public void testBasics() throws Exception {
 
         // check basic pub/sub on QOS 0
+        LOG.info("check basic pub/sub on QOS 0");
         expectedResult = "hello mqtt broker on QOS 0";
         result = null;
         connection.subscribe(new Topic[]{new Topic("1/2/3", AT_MOST_ONCE)});
@@ -88,6 +92,7 @@ public class MqttTest extends TestCase implements MqttTestConstants {
         connection.unsubscribe(new String[]{"1/2/3"});
 
         // check basic pub/sub on QOS 1
+        LOG.info("check basic pub/sub on QOS 1");
         expectedResult = "hello mqtt broker on QOS 1";
         result = null;
         connection.subscribe(new Topic[]{new Topic("a/b/c", AT_LEAST_ONCE)});
@@ -99,6 +104,7 @@ public class MqttTest extends TestCase implements MqttTestConstants {
         connection.unsubscribe(new String[]{"a/b/c"});
 
         // check basic pub/sub on QOS 2
+        LOG.info("check basic pub/sub on QOS 2");
         expectedResult = "hello mqtt broker on QOS 2";
         result = null;
         connection.subscribe(new Topic[]{new Topic("1/2", EXACTLY_ONCE)});
@@ -256,8 +262,7 @@ public class MqttTest extends TestCase implements MqttTestConstants {
         Thread.sleep(TIMEOUT);
         assertNull(result);
         result = connection.receive(TIMEOUT, TimeUnit.MILLISECONDS);
-        assertEquals(expectedResult, new String(result.getPayload(), "UTF-8"));
-        result.ack();
+        assertNull(result);
 
         connection.subscribe(new Topic[]{new Topic("#", AT_MOST_ONCE)});
         expectedResult = "hello mqtt broker on some other topic topic";

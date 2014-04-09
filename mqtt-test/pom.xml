@@ -13,13 +13,12 @@
 	<parent>
 		<groupId>org.fusesource.mqtt-client</groupId>
 		<artifactId>mqtt-client-project</artifactId>
-		<version>1.10-SNAPSHOT</version>
+		<version>1.11-SNAPSHOT</version>
 	</parent>
 
 
 	<groupId>org.fusesource</groupId>
 	<artifactId>mqtt-test</artifactId>
-	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>mqtt-test</name>
@@ -54,7 +53,7 @@
 		<dependency>
 			<groupId>org.fusesource.mqtt-client</groupId>
 			<artifactId>mqtt-client</artifactId>
-			<version>1.6</version>
+			<version>1.11-SNAPSHOT</version>
 			<type>bundle</type>
 		</dependency>
 		<dependency>
