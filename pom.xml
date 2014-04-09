@@ -320,6 +320,7 @@
     <module>mqtt-client</module>
     <module>mqtt-client-java1.4-uber</module>
     <module>mqtt-client-website</module>
+    <module>mqtt-test</module>
   </modules>
     
 </project>
